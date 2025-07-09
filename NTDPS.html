@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Notice of Delivery - Depletion</title>
+  <title>Notice of Delivery</title>
   <style>
     body {
       font-family: Tahoma, sans-serif;
@@ -27,10 +27,10 @@
     .top-bar {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .signature p:first-child {
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
     .signature p:nth-child(2) {
       margin-bottom: 10px;
@@ -57,15 +57,17 @@
 
     <p>Dear <span class="dynamic-label" id="nickname"></span>,</p>
 
-    <p>This refers to the delivery of the above mentioned item. To date, our records show that our stock is already depleted and replenishment of stock is necessary to avoid zero stock.</p>
+    <p>This is to request your company to directly deliver the following item(s) to the office of our Regional/LGU Depto:</p>
   </div>
 
   <table id="delivery-table">
     <thead>
       <tr>
         <th>PO Number</th>
-        <th>Qty</th>
+        <th>Quantity</th>
+        <th>Document Numner</th>
         <th>Delivery Place</th>
+        <th>End-User's Information</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -92,27 +94,27 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     const fields = [
-      "reference_number", "date_today", "recipient_name", "supplier", "address",
-      "po_number", "item_description", "nickname", "days_in_words", "days_number"
+      "reference_number", "recipient_name", "supplier", "address",
+      "po_number", "item_description", "nickname",
+      "days_in_words", "days_number", "date_today"
     ];
 
     fields.forEach(field => {
       const value = urlParams.get(field) || "";
-      document.getElementById(field).textContent = decodeURIComponent(value);
+      document.getElementById(field).textContent = value;
     });
 
-    const deliveryDataRaw = urlParams.get("delivery_rows") || "";
-    const deliveryData = decodeURIComponent(deliveryDataRaw);
-    const parts = deliveryData.split("@").map(p => p.trim());
+    const deliveryData = urlParams.get("delivery_rows") || "";
+    const rows = deliveryData.split("@");
     const tbody = document.querySelector("#delivery-table tbody");
 
-    if (parts.length === 3) {
+    for (let i = 0; i < rows.length; i += 5) {
       const tr = document.createElement("tr");
-      parts.forEach(text => {
+      for (let j = 0; j < 5; j++) {
         const td = document.createElement("td");
-        td.textContent = text;
+        td.textContent = rows[i + j] ? rows[i + j].trim() : "";
         tr.appendChild(td);
-      });
+      }
       tbody.appendChild(tr);
     }
   </script>
