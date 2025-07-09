@@ -98,18 +98,19 @@
 
     fields.forEach(field => {
       const value = urlParams.get(field) || "";
-      document.getElementById(field).textContent = value;
+      document.getElementById(field).textContent = decodeURIComponent(value);
     });
 
-    const deliveryData = urlParams.get("delivery_rows") || "";
-    const parts = deliveryData.split("@");
+    const deliveryDataRaw = urlParams.get("delivery_rows") || "";
+    const deliveryData = decodeURIComponent(deliveryDataRaw);
+    const parts = deliveryData.split("@").map(p => p.trim());
     const tbody = document.querySelector("#delivery-table tbody");
 
     if (parts.length === 3) {
       const tr = document.createElement("tr");
       parts.forEach(text => {
         const td = document.createElement("td");
-        td.textContent = text.trim();
+        td.textContent = text;
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
@@ -117,3 +118,4 @@
   </script>
 </body>
 </html>
+
