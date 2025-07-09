@@ -102,16 +102,16 @@
     });
 
     const deliveryData = urlParams.get("delivery_rows") || "";
-    const rows = deliveryData.split("@");
+    const parts = deliveryData.split("@");
     const tbody = document.querySelector("#delivery-table tbody");
 
-    for (let i = 0; i < rows.length; i += 3) {
+    if (parts.length === 3) {
       const tr = document.createElement("tr");
-      for (let j = 0; j < 3; j++) {
+      parts.forEach(text => {
         const td = document.createElement("td");
-        td.textContent = rows[i + j] ? rows[i + j].trim() : "";
+        td.textContent = text.trim();
         tr.appendChild(td);
-      }
+      });
       tbody.appendChild(tr);
     }
   </script>
