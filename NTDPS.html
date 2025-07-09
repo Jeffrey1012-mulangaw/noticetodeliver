@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Notice of Delivery - Depletion</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      font-size: 10pt;
+      margin: 1.5in 50px 50px 50px;
+    }
+    .header, .section, .signature {
+      margin-bottom: 20px;
+    }
+    .dynamic-label {
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 6px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .signature p:first-child {
+      margin-bottom: 50px;
+    }
+    .signature p:nth-child(2) {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div><span class="dynamic-label" id="date_today"></span></div>
+    <div><span class="dynamic-label" id="reference_number"></span></div>
+  </div>
+
+  <div class="header">
+    <p><span class="dynamic-label" id="recipient_name"></span><br>
+    Authorized Representative<br>
+    <span class="dynamic-label" id="supplier"></span><br>
+    <span class="dynamic-label" id="address"></span></p>
+  </div>
+
+  <div class="section">
+    <p>Subject:<br>
+    Notice of Delivery under PO Number <span class="dynamic-label" id="po_number"></span><br>
+    <span class="dynamic-label" id="item_description"></span> under Bulk Ordering Agreement</p>
+
+    <p>Dear <span class="dynamic-label" id="nickname"></span>,</p>
+
+    <p>This refers to the delivery of the above mentioned item. To date, our records show that our stock is already depleted and replenishment of stock is necessary to avoid zero stock.</p>
+  </div>
+
+  <table id="delivery-table">
+    <thead>
+      <tr>
+        <th>PO Number</th>
+        <th>Qty</th>
+        <th>Delivery Place</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="section">
+    <p>Upon signing to the conforme, you agree to deliver the above item(s) under the terms and conditions provided in the Interim Guidelines for Bulk Ordering of Common-Use Supplies and Equipment. Please take note that the delivery must be made within <span class="dynamic-label" id="days_in_words"></span> (<span class="dynamic-label" id="days_number"></span>) Calendar Days from receipt of this notice.</p>
+
+    <p>For information and guidance.</p>
+
+    <p>Thank you.</p>
+  </div>
+
+  <div class="signature">
+    <p>Very truly yours,</p>
+    <p><strong>SAMANTHA GRACE E. MOSCOSO</strong><br>
+    Acting Director IV, Operations Office</p>
+
+    <p>Conforme:</p>
+    <p>Authorized Representative ____________________ Date ___________ Date of Delivery ___________</p>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const fields = [
+      "reference_number", "date_today", "recipient_name", "supplier", "address",
+      "po_number", "item_description", "nickname", "days_in_words", "days_number"
+    ];
+
+    fields.forEach(field => {
+      const value = urlParams.get(field) || "";
+      document.getElementById(field).textContent = value;
+    });
+
+    const deliveryData = urlParams.get("delivery_rows") || "";
+    const rows = deliveryData.split("@");
+    const tbody = document.querySelector("#delivery-table tbody");
+
+    for (let i = 0; i < rows.length; i += 3) {
+      const tr = document.createElement("tr");
+      for (let j = 0; j < 3; j++) {
+        const td = document.createElement("td");
+        td.textContent = rows[i + j] ? rows[i + j].trim() : "";
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+  </script>
+</body>
+</html>
